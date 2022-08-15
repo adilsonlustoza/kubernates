@@ -1,0 +1,33 @@
+version: "3.2"
+services:
+ # web-api:
+ #   container_name: swagger-api
+ #   build:
+ #     context: ./App
+ #     dockerfile: . 
+ #   ports:
+ #     - 9090:80
+ #   networks:
+ #     - swagger-network
+ #   depends_on:
+ #     - "sql-server-db" 
+  sql-server-db:
+    container_name: sql-server-db
+    build:
+      context: ./DataBase
+      dockerfile: .
+    restart: "always"
+    ports:
+      - "1433:1433"
+    networks:
+      - swagger-network  
+    volumes:
+      - ~/apps/mssql/data:/var/lib/mssqlql/data
+    environment:
+      SA_PASSWORD: "sqlserver@2017"
+      MSSQL_SA_PASSWORD: "sqlserver@2017"
+      ACCEPT_EULA: "Y"
+
+networks: 
+    swagger-network :
+        driver: bridge

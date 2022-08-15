@@ -19,9 +19,10 @@ public class MoviesController : ControllerBase
 
     }
 
-    [HttpGet(Name = "Movies")]
+   [HttpGet(Name = "Movies")]
     public IEnumerable<Movie> Get()
     {
         return _memoryLoad.Movies();
     }
+
 }

@@ -1,6 +1,7 @@
 docker-compose up -d
 docker-compose ps
 docker exec -it  sql-server-db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sqlserver@2017
+
 select Name from sys.databases;
 go;
 

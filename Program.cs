@@ -9,7 +9,23 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+
+        var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         var builder = WebApplication.CreateBuilder(args);
+
+         builder.Services.AddCors(options =>
+                                    {
+                                        options.AddPolicy(name: MyAllowSpecificOrigins,
+                                                            policy  =>
+                                                            {
+                                                                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                                            });
+                                    });
+
+        builder.WebHost.UseUrls("http://*:80;http://*:5110");
+
+        builder.WebHost.UseSetting("https_port", "5001");
 
         builder.Services.AddDbContext<MovieContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("MiniKubeDb")));
         // Add services to the container.
@@ -39,26 +55,29 @@ internal class Program
 
         builder.Services.AddTransient<IMemoryLoad<Movie>, MemoryLoad>();
 
+       
+
         CreateEntityDataBase(builder.Services);
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
                                 {
                                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                                     options.RoutePrefix = string.Empty;
                                 });
-        }
 
-        app.UseHttpsRedirection();
+
+       // app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.UseCors(MyAllowSpecificOrigins);
 
         app.Run();
     }
