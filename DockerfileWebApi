@@ -1,4 +1,4 @@
-
+ARG password="password"
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
@@ -9,10 +9,14 @@ RUN dotnet restore
 # Copy everything else and build
 COPY ./ ./
 RUN dotnet publish -c Release -o out
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https --trust
+RUN dotnet dev-certs https --check
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/sdk:6.0
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "single-api.dll"]

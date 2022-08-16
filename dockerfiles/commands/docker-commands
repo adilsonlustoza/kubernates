@@ -7,3 +7,4 @@ go;
 
 
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sql-server-db
+docker compose down --remove-orphans --rmi local --timeout 10

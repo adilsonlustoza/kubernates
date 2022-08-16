@@ -23,9 +23,8 @@ internal class Program
                                                             });
                                     });
 
-        builder.WebHost.UseUrls("http://*:80;http://*:5110");
-
-        builder.WebHost.UseSetting("https_port", "5001");
+        builder.WebHost.UseUrls("http://+:80");
+       // builder.WebHost.UseSetting("https_port","443");
 
         builder.Services.AddDbContext<MovieContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("MiniKubeDb")));
         // Add services to the container.
@@ -71,7 +70,7 @@ internal class Program
                                 });
 
 
-       // app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
         app.UseAuthorization();
 

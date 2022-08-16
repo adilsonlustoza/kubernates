@@ -2,7 +2,7 @@ version: "3.2"
 services:
    
   sql-server-db:
-    container_name: sql-server-db
+    container_name: ${CONTAINER_DB}
     build:
       context: .
       dockerfile: DockerfileDataBase
@@ -14,18 +14,22 @@ services:
     volumes:
       - ~/apps/mssql/data:/var/lib/mssqlql/data
     environment:
-      SA_PASSWORD: "sqlserver@2017"
-      MSSQL_SA_PASSWORD: "sqlserver@2017"
+      SA_PASSWORD: ${DB_SA_PASSWORD}
+      MSSQL_SA_PASSWORD: ${DB_SA_PASSWORD}
       ACCEPT_EULA: "Y"
 
   web-api:
-    container_name: swagger-api
+    container_name: ${CONTAINER_API}
     build:
       context: .
       dockerfile: DockerfileWebApi   
     ports:
-      - 8090:80
-      - 8091:5110     
+      - 8090:80       
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8090
+    volumes:
+      - ~/.aspnet/https:/https:ro  
     networks:
       - swagger-network
     depends_on:
